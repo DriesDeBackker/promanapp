@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id="promanJS" external.linked.project.path="$MODULE_DIR$/../../js" external.root.project.path="$MODULE_DIR$/../.." external.system.id="SBT" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+    <output url="file://$MODULE_DIR$/../../js/target/scala-2.11/classes" />
+    <output-test url="file://$MODULE_DIR$/../../js/target/scala-2.11/test-classes" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../js">
+      <sourceFolder url="file://$MODULE_DIR$/../../js/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../js/src/main/scala" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../js/src/main/scala-2.11" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../js/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../js/src/test/scala" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../js/src/test/scala-2.11" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../js/target/scala-2.11/src_managed/main" isTestSource="false" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../js/target/scala-2.11/src_managed/test" isTestSource="true" generated="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../js/src/main/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../js/target/scala-2.11/resource_managed/main" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../js/src/test/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../js/target/scala-2.11/resource_managed/test" type="java-test-resource" />
+      <excludeFolder url="file://$MODULE_DIR$/../../js/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="sbt: unmanaged-jars">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../../js/lib/cats-core_sjs0.6_2.11-0.9.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/cats-kernel_sjs0.6_2.11-0.9.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/cats-macros_sjs0.6_2.11-0.9.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/circe-core_sjs0.6_2.11-0.8.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/circe-generic_sjs0.6_2.11-0.8.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/circe-numbers_sjs0.6_2.11-0.8.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/circe-parser_sjs0.6_2.11-0.8.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/circe-scalajs_sjs0.6_2.11-0.8.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/machinist_sjs0.6_2.11-0.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/macro-compat_2.11-1.1.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/macro-compat_sjs0.6_2.11-1.1.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/proman_2.11-0.0.2-SNAPSHOT.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/proman_sjs0.6_2.11-0.0.2-SNAPSHOT.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/root-2017-2018_2.11-0.0.2-SNAPSHOT.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/scalajs-dom_sjs0.6_2.11-0.9.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/scalajs-library_2.11-0.6.19.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/scalatags_sjs0.6_2.11-0.6.7.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/shapeless_sjs0.6_2.11-2.3.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/simulacrum_sjs0.6_2.11-0.10.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/../../js/lib/sourcecode_sjs0.6_2.11-0.1.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module" module-name="project-sources" exported="" />
+    <orderEntry type="library" name="sbt: com.chuusai:shapeless_sjs0.6_2.11:2.3.2:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.github.mpilquist:simulacrum_sjs0.6_2.11:0.10.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.lihaoyi:scalatags_sjs0.6_2.11:0.6.7:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.lihaoyi:sourcecode_sjs0.6_2.11:0.1.4:jar" level="project" />
+    <orderEntry type="library" name="sbt: io.circe:circe-core_sjs0.6_2.11:0.8.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: io.circe:circe-generic_sjs0.6_2.11:0.8.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: io.circe:circe-numbers_sjs0.6_2.11:0.8.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: io.circe:circe-parser_sjs0.6_2.11:0.8.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: io.circe:circe-scalajs_sjs0.6_2.11:0.8.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-js:scalajs-dom_sjs0.6_2.11:0.9.1:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-js:scalajs-library_2.11:0.6.19:jar" level="project" />
+    <orderEntry type="library" scope="TEST" name="sbt: org.scala-js:scalajs-test-interface_2.11:0.6.19:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-lang:scala-library:2.11.8:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-lang:scala-reflect:2.11.8:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.typelevel:cats-core_sjs0.6_2.11:0.9.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.typelevel:cats-kernel_sjs0.6_2.11:0.9.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.typelevel:cats-macros_sjs0.6_2.11:0.9.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.typelevel:machinist_sjs0.6_2.11:0.6.1:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.typelevel:macro-compat_2.11:1.1.1:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.typelevel:macro-compat_sjs0.6_2.11:1.1.1:jar" level="project" />
+  </component>
+</module>

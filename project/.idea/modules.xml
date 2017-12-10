@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/project.iml" filepath="$PROJECT_DIR$/.idea/modules/project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/project-build.iml" filepath="$PROJECT_DIR$/.idea/modules/project-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/project-sources.iml" filepath="$PROJECT_DIR$/.idea/modules/project-sources.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/promanJS.iml" filepath="$PROJECT_DIR$/.idea/modules/promanJS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/promanJS-build.iml" filepath="$PROJECT_DIR$/.idea/modules/promanJS-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/promanJVM.iml" filepath="$PROJECT_DIR$/.idea/modules/promanJVM.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/promanJVM-build.iml" filepath="$PROJECT_DIR$/.idea/modules/promanJVM-build.iml" />
+    </modules>
+  </component>
+</project>

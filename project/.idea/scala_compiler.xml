@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ScalaCompilerConfiguration">
+    <option name="incrementalityType" value="SBT" />
+    <profile name="sbt 1" modules="oplossing,project,promanJVM">
+      <option name="higherKinds" value="true" />
+      <option name="deprecationWarnings" value="true" />
+      <option name="featureWarnings" value="true" />
+      <parameters>
+        <parameter value="-encoding" />
+        <parameter value="UTF-8" />
+        <parameter value="-Xlint" />
+        <parameter value="-Yno-adapted-args" />
+        <parameter value="-Ywarn-dead-code" />
+        <parameter value="-Ywarn-numeric-widen" />
+        <parameter value="-Ywarn-value-discard" />
+      </parameters>
+    </profile>
+    <profile name="sbt 2" modules="promanJS">
+      <option name="higherKinds" value="true" />
+      <option name="deprecationWarnings" value="true" />
+      <option name="featureWarnings" value="true" />
+      <parameters>
+        <parameter value="-encoding" />
+        <parameter value="UTF-8" />
+        <parameter value="-Xlint" />
+        <parameter value="-Yno-adapted-args" />
+        <parameter value="-Ywarn-dead-code" />
+        <parameter value="-Ywarn-numeric-widen" />
+        <parameter value="-Ywarn-value-discard" />
+        <parameter value="-P:scalajs:mapSourceURI:file:/D:/Documenten/School/KU%20Leuven/Master%20Ingenieurswetenschappen/2de%20Master/Semester%201/CPL/Talen/Scala/Project/promanapp/project/js/src/main/scala-2.11/-&gt;e8fa5f4690292d12dc2c/" />
+        <parameter value="-P:scalajs:mapSourceURI:file:/D:/Documenten/School/KU%20Leuven/Master%20Ingenieurswetenschappen/2de%20Master/Semester%201/CPL/Talen/Scala/Project/promanapp/project/js/src/main/scala/-&gt;a3f45d71ec0bf11c3e01/" />
+        <parameter value="-P:scalajs:mapSourceURI:file:/D:/Documenten/School/KU%20Leuven/Master%20Ingenieurswetenschappen/2de%20Master/Semester%201/CPL/Talen/Scala/Project/promanapp/project/js/src/main/java/-&gt;35157b6eaf08078a3e6d/" />
+        <parameter value="-P:scalajs:mapSourceURI:file:/D:/Documenten/School/KU%20Leuven/Master%20Ingenieurswetenschappen/2de%20Master/Semester%201/CPL/Talen/Scala/Project/promanapp/project/shared/src/main/scala-2.11/-&gt;2b50ad845df61315c486/" />
+        <parameter value="-P:scalajs:mapSourceURI:file:/D:/Documenten/School/KU%20Leuven/Master%20Ingenieurswetenschappen/2de%20Master/Semester%201/CPL/Talen/Scala/Project/promanapp/project/shared/src/main/scala/-&gt;581ae72c58abe3cb03df/" />
+      </parameters>
+      <plugins>
+        <plugin path="C:\Users\Dries\.ivy2\cache\org.scala-js\scalajs-compiler_2.11.8\jars\scalajs-compiler_2.11.8-0.6.19.jar" />
+      </plugins>
+    </profile>
+  </component>
+</project>
