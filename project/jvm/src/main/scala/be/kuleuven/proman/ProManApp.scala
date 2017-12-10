@@ -16,52 +16,48 @@ import scalatags.Text.all._
 
 object ProManApp extends App {
 
-  // Step 1: Create a list of Animals, other extensions are to change the case class
+  // Step 1: Create a list of Projects, other extensions are to change the case class
   // itself and expand upon its current definition.
-  var animals: Seq[Animal] = Seq(Animal("Dog", "Max"))
+  var projects: Seq[Project] = Seq(Project("project"))
 
   def serveFrag(tag: Frag) = Ok(tag.render).withType(MediaType.`text/html`)
 
-  val ui = new AnimalTemplate(scalatags.Text)
+  val ui = new ProjectTemplate(scalatags.Text)
 
   // Step 2: Define an Http4s HttpService
   val helloWorld: HttpService = HttpService {
     case GET -> Root / "hello" => helloWorldHtml
-    case GET -> Root / "animals" =>
+    case GET -> Root / "projects" =>
       serveFrag(
         html(
           head(),
           body(
-            h1("Animals"),
-            ui.animalsTemplate(animals)
+            h1("Projects"),
+            ui.projectsTemplate(projects)
           )
         )
       )
 
     case GET -> Root / "jsprogram" => javascriptProgramResponse
 
-    case GET -> Root / "service" / "animal" => Ok(animals.asJson)
+    case GET -> Root / "service" / "project" => Ok(projects.asJson)
 
-    case req @ POST -> Root / "service" / "animal" =>
+    case req @ POST -> Root / "service" / "project" =>
       for {
-        animal <- req.as(jsonOf[Animal])
-        response <- Ok(animal.name.asJson)
+        project <- req.as(jsonOf[Project])
+        response <- Ok(project.name.asJson)
       } yield {
-        animals = animals :+ animal
-        println(animals)
+        projects = projects :+ project
+        println(projects)
         response
       }
 
-    case GET -> Root / "jsanimals" =>
+    case GET -> Root / "jsprojects" =>
       serveFrag(
         html(
           head(),
-          body(h1("Animals"),
-               div(id := "animals"),
-               div(input(id := "dogName",
-                         tpe := "text",
-                         placeholder := "New Dog"),
-                   button(id := "addDog", "Add")),
+          body(h1("Projects"),
+               div(id := "content"),
                script(src := "/jsprogram"))
         )
       )
@@ -69,7 +65,7 @@ object ProManApp extends App {
 
   // Step 2 HELPER: Use this Task to define a hello world page.
   // Step 3: Expand this page to render a proper Html page that displays
-  // all the animals you defined in Step 1. Be smart about this and write code
+  // all the projects you defined in Step 1. Be smart about this and write code
   // that does not need modification when the list changes size...
   lazy val helloWorldHtml: Task[Response] =
     serveFrag(h1("You'll complete me!").render)

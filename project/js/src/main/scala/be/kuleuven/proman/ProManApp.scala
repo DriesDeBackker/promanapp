@@ -5,57 +5,80 @@ import io.circe.parser._
 import io.circe.syntax._
 import org.scalajs.dom
 import org.scalajs.dom.ext.Ajax
-import org.scalajs.dom.raw.{Event, HTMLButtonElement, HTMLInputElement}
+import org.scalajs.dom.raw.{Event, HTMLButtonElement, HTMLInputElement, NodeList}
 
+import scalatags.Text.all._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
 object ProManApp {
+
   def main(args: Array[String]): Unit = {
 
-    // STEP 4: Embed this program into your HTML and make sure it loads.
-    // dom.window.alert("YOUR JAVASCRIPT LOADED")
+    var state: Int = -1
 
-    // STEP 5: Change your HttpService so that it defines a second page.
-    // This page will be a copy of the first page but instead of generating
-    // server-side HTML you will load the animals client-side using the Javascript APIs.
+    val contentBox = dom.document.body .querySelector("#content")
 
-    def update() =
-      Ajax.get("/service/animal").onComplete {
+    def changeView(): Unit = state match{
+      case 0 => {
+        val ui = new ProjectTemplate(scalatags.JsDom)
+        contentBox.innerHTML = ""
+        contentBox.appendChild(ui.projectsViewTemplate().render)
+        updateProjects()
+      }
+      case 1 => contentBox.innerHTML = "Godverdomme zeg"
+    }
+
+    def changeStateTo(newState: Int) = {
+      state = newState
+      changeView()
+    }
+
+    changeStateTo(0)
+
+    def updateProjects(): Unit =
+      Ajax.get("/service/project").onComplete {
         case Success(xhr) =>
-          val animalsM = decode[Seq[Animal]](xhr.responseText)
+          val projectsM = decode[Seq[Project]](xhr.responseText)
 
-          animalsM match {
+          projectsM match {
             case Left(err) => dom.window.alert(err.toString)
-            case Right(animals) =>
-              val animalTarget = dom.document.body.querySelector("#animals")
-              animalTarget.innerHTML = ""
-              val ui = new AnimalTemplate(scalatags.JsDom)
-              animalTarget.appendChild(ui.animalsTemplate(animals).render)
+            case Right(projects) =>
+              val projectTarget = dom.document.body.querySelector("#projects")
+              projectTarget.innerHTML = ""
+              val ui = new ProjectTemplate(scalatags.JsDom)
+              projectTarget.appendChild(ui.projectsTemplate(projects).render)
           }
         case Failure(err) => dom.window.alert(err.toString)
       }
 
-    update()
+    //def updateProject() = {}
+    val goToProjectEl = dom.document.body.
+      querySelector("#uwmoeke").
+      asInstanceOf[HTMLButtonElement]
 
-    val addDogEl = dom.document.body
-      .querySelector("#addDog")
+    goToProjectEl.onclick = (ev: Event) => {
+      contentBox.innerHTML = "fuck you"
+    }
+
+    val addProjectEl = dom.document.body
+      .querySelector("#addProject")
       .asInstanceOf[HTMLButtonElement]
 
-    addDogEl.onclick = (ev: Event) => {
-      val dogNameEl = dom.document.body
-        .querySelector("#dogName")
+    addProjectEl.onclick = (ev: Event) => {
+      val projectNameEl = dom.document.body
+        .querySelector("#projectName")
         .asInstanceOf[HTMLInputElement]
-      val dogName = dogNameEl.value
+      val projectName = projectNameEl.value
 
       Ajax
-        .post("/service/animal", Animal("dog", dogName).asJson.noSpaces)
+        .post("/service/project", Project(projectName).asJson.noSpaces)
         .onComplete {
           case Success(xhr) =>
-            dogNameEl.value = ""
+            projectNameEl.value = ""
             // This is a very, VERY crappy way of updating, don't do this in
             // your  project, come up with something that doesn't redraw the entire tree!
-            update()
+            updateProjects()
           case Failure(err) => dom.window.alert(err.toString)
         }
     }
