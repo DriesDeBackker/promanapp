@@ -4,6 +4,21 @@ import scalatags.generic.Bundle
 
 case class Project(name: String) {
   var entries: Seq[Entry] = Seq()
+
+  def addEntry(entry: Entry): Unit = {
+    entries = entries :+ entry
+  }
+
+  def updateEntry(entry: Entry): Unit = {
+    var storedEntry = getEntry(entry.name)
+    storedEntry.done = entry.done
+  }
+
+  def getEntry(name: String): Entry = {
+    entries.filter(_.hasName(name)).head
+  }
+
+  def hasName(searchName :String): Boolean = searchName == name
 }
 
 class ProjectTemplate[Builder, Output <: FragT, FragT](

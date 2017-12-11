@@ -4,7 +4,14 @@ import scalatags.generic.Bundle
 
 case class Entry(name: String) {
   val creationTime = System.currentTimeMillis()
-  var done: Boolean = false
+  var done = false;
+  def setToUndone(): Unit = {
+    done = true
+  }
+  def setToDone(): Unit = {
+    done = false
+  }
+  def hasName(searchName: String): Boolean = name == searchName
 }
 
 class EntryTemplate[Builder, Output <: FragT, FragT](val bundle: Bundle[Builder, Output, FragT]) {

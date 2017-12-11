@@ -18,11 +18,15 @@ object ProManApp extends App {
 
   // Step 1: Create a list of Projects, other extensions are to change the case class
   // itself and expand upon its current definition.
-  val project = Project("project")
-  project.entries = Seq(Entry("entry 1"), Entry("entry 2"))
+  val project = Project("project1")
+  var entry2 = Entry("entry 2")
+  entry2.setToDone()
+  project.entries = Seq(Entry("entry 1"), entry2)
   var projects: Seq[Project] = Seq(project)
+  def getProject(name: String): Project = projects.filter(_.hasName(name)).head
 
   def hasName(name: String)(p: Project): Boolean = p.name == name
+  def hasEntryName(name: String)(e: Entry): Boolean = e.name == name
 
   def serveFrag(tag: Frag) = Ok(tag.render).withType(MediaType.`text/html`)
 
@@ -60,6 +64,26 @@ object ProManApp extends App {
         response
       }
 
+    case req @ POST -> Root / "service" / "project" / projectName / "add" =>
+      val project: Project = projects.filter(hasName(projectName)).head
+      for {
+        entry <- req.as(jsonOf[Entry])
+        response <- Ok(entry.name.asJson)
+      } yield {
+        project.addEntry(entry)
+        response
+      }
+
+    case req @ POST -> Root / "service" / "project" / projectName / "update" =>
+      val project: Project = projects.filter(hasName(projectName)).head
+      for {
+        entry <- req.as(jsonOf[Entry])
+        response <- Ok(entry.name.asJson)
+      } yield {
+        project.updateEntry(entry)
+        response
+      }
+
     case GET -> Root / "jsprojects" =>
       serveFrag(
         html(
@@ -71,10 +95,6 @@ object ProManApp extends App {
       )
   }
 
-  // Step 2 HELPER: Use this Task to define a hello world page.
-  // Step 3: Expand this page to render a proper Html page that displays
-  // all the projects you defined in Step 1. Be smart about this and write code
-  // that does not need modification when the list changes size...
   lazy val helloWorldHtml: Task[Response] =
     serveFrag(h1("You'll complete me!").render)
 
