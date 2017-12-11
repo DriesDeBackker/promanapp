@@ -18,7 +18,11 @@ object ProManApp extends App {
 
   // Step 1: Create a list of Projects, other extensions are to change the case class
   // itself and expand upon its current definition.
-  var projects: Seq[Project] = Seq(Project("project"))
+  val project = Project("project")
+  project.entries = Seq(Entry("entry 1"), Entry("entry 2"))
+  var projects: Seq[Project] = Seq(project)
+
+  def hasName(name: String)(p: Project): Boolean = p.name == name
 
   def serveFrag(tag: Frag) = Ok(tag.render).withType(MediaType.`text/html`)
 
@@ -41,6 +45,10 @@ object ProManApp extends App {
     case GET -> Root / "jsprogram" => javascriptProgramResponse
 
     case GET -> Root / "service" / "project" => Ok(projects.asJson)
+
+    case GET -> Root / "service" / "project" / projectName =>
+      val project: Project = projects.filter(hasName(projectName)).head
+      Ok(project.entries.asJson)
 
     case req @ POST -> Root / "service" / "project" =>
       for {

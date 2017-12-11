@@ -2,7 +2,9 @@ package be.kuleuven.proman
 
 import scalatags.generic.Bundle
 
-case class Project(name: String)
+case class Project(name: String) {
+  var entries: Seq[Entry] = Seq()
+}
 
 class ProjectTemplate[Builder, Output <: FragT, FragT](
     val bundle: Bundle[Builder, Output, FragT]) {
@@ -10,7 +12,7 @@ class ProjectTemplate[Builder, Output <: FragT, FragT](
   import bundle.all._
 
   def projectTemplate(p: Project) =
-    button(id := "uwmoeke", p.name)
+    div(id := p.name, p.name)
 
   def projectsTemplate(pjs: Seq[Project]) =
     div(
