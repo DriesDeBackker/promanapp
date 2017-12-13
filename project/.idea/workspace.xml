@@ -41,11 +41,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ProManApp.scala" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ProManApp.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/src/main/scala/be/kuleuven/proman/ProManApp.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="86" column="37" lean-forward="false" selection-start-line="86" selection-start-column="37" selection-end-line="86" selection-end-column="37" />
+            <state relative-caret-position="324">
+              <caret line="43" column="33" lean-forward="false" selection-start-line="43" selection-start-column="33" selection-end-line="43" selection-end-column="33" />
               <folding>
                 <element signature="e#28#58#0" expanded="true" />
               </folding>
@@ -56,8 +56,8 @@
       <file leaf-file-name="ProManApp.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/jvm/src/main/scala/be/kuleuven/proman/ProManApp.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="54" column="32" lean-forward="true" selection-start-line="54" selection-start-column="32" selection-end-line="54" selection-end-column="32" />
+            <state relative-caret-position="1479">
+              <caret line="108" column="30" lean-forward="false" selection-start-line="108" selection-start-column="30" selection-end-line="108" selection-end-column="30" />
               <folding>
                 <element signature="e#28#47#0" expanded="true" />
               </folding>
@@ -68,18 +68,18 @@
       <file leaf-file-name="Project.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/shared/src/main/scala/be/kuleuven/proman/Project.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="13" column="33" lean-forward="false" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
+            <state relative-caret-position="408">
+              <caret line="49" column="10" lean-forward="false" selection-start-line="49" selection-start-column="10" selection-end-line="49" selection-end-column="10" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Entry.scala" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Entry.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/shared/src/main/scala/be/kuleuven/proman/Entry.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="10" column="27" lean-forward="true" selection-start-line="10" selection-start-column="27" selection-end-line="10" selection-end-column="27" />
+            <state relative-caret-position="340">
+              <caret line="41" column="32" lean-forward="false" selection-start-line="41" selection-start-column="19" selection-end-line="41" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -102,6 +102,8 @@
       <find>update</find>
       <find>Project</find>
       <find>project</find>
+      <find>add</find>
+      <find>getHTMLElement</find>
     </findStrings>
     <replaceStrings>
       <replace>project</replace>
@@ -125,10 +127,10 @@
         <option value="$PROJECT_DIR$/shared/src/main/scala/be/kuleuven/proman/MyProject.sc" />
         <option value="$PROJECT_DIR$/shared/src/main/scala/be/kuleuven/proman/Entry.sc" />
         <option value="$PROJECT_DIR$/MyEntry.sc" />
-        <option value="$PROJECT_DIR$/js/src/main/scala/be/kuleuven/proman/ProManApp.scala" />
         <option value="$PROJECT_DIR$/shared/src/main/scala/be/kuleuven/proman/Project.scala" />
         <option value="$PROJECT_DIR$/jvm/src/main/scala/be/kuleuven/proman/ProManApp.scala" />
         <option value="$PROJECT_DIR$/shared/src/main/scala/be/kuleuven/proman/Entry.scala" />
+        <option value="$PROJECT_DIR$/js/src/main/scala/be/kuleuven/proman/ProManApp.scala" />
       </list>
     </option>
   </component>
@@ -153,6 +155,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -270,9 +273,8 @@
         </subPane>
       </pane>
       <pane id="AndroidView" />
-      <pane id="Scope" />
       <pane id="Scratches" />
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -466,7 +468,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14392324" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14872068" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="sbt-shell-toolwindow" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35652173" sideWeight="0.4936034" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Learn" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -850,20 +852,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/js/src/main/scala/be/kuleuven/proman/ProManApp.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="86" column="37" lean-forward="false" selection-start-line="86" selection-start-column="37" selection-end-line="86" selection-end-column="37" />
-          <folding>
-            <element signature="e#28#58#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/jvm/src/main/scala/be/kuleuven/proman/ProManApp.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="54" column="32" lean-forward="true" selection-start-line="54" selection-start-column="32" selection-end-line="54" selection-end-column="32" />
+        <state relative-caret-position="1479">
+          <caret line="108" column="30" lean-forward="false" selection-start-line="108" selection-start-column="30" selection-end-line="108" selection-end-column="30" />
           <folding>
             <element signature="e#28#47#0" expanded="true" />
           </folding>
@@ -872,17 +864,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/shared/src/main/scala/be/kuleuven/proman/Project.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="33" lean-forward="false" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
+        <state relative-caret-position="408">
+          <caret line="49" column="10" lean-forward="false" selection-start-line="49" selection-start-column="10" selection-end-line="49" selection-end-column="10" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/shared/src/main/scala/be/kuleuven/proman/Entry.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="27" lean-forward="true" selection-start-line="10" selection-start-column="27" selection-end-line="10" selection-end-column="27" />
+        <state relative-caret-position="340">
+          <caret line="41" column="32" lean-forward="false" selection-start-line="41" selection-start-column="19" selection-end-line="41" selection-end-column="32" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/src/main/scala/be/kuleuven/proman/ProManApp.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="43" column="33" lean-forward="false" selection-start-line="43" selection-start-column="33" selection-end-line="43" selection-end-column="33" />
+          <folding>
+            <element signature="e#28#58#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

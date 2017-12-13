@@ -9,13 +9,18 @@ case class Project(name: String) {
     entries = entries :+ entry
   }
 
-  def updateEntry(entry: Entry): Unit = {
-    var storedEntry = getEntry(entry.name)
-    storedEntry.done = entry.done
+  def addNewEntry(entryContent: String): Unit = {
+    addEntry(Entry(entries.size+1, done = false, entryContent))
   }
 
-  def getEntry(name: String): Entry = {
-    entries.filter(_.hasName(name)).head
+  def updateEntry(entry: Entry): Unit = {
+    val storedEntry = getEntry(entry.id)
+    storedEntry.done = entry.done
+    storedEntry.content = entry.content
+  }
+
+  def getEntry(id: Int): Entry = {
+    entries.filter(_.hasID(id)).head
   }
 
   def hasName(searchName :String): Boolean = searchName == name
@@ -41,6 +46,7 @@ class ProjectTemplate[Builder, Output <: FragT, FragT](
           tpe := "text",
           placeholder := "New Project"),
         button(id := "addProject", "Add")
-      )
+      ),
+      br()
     )
 }

@@ -2,45 +2,55 @@ package be.kuleuven.proman
 
 import scalatags.generic.Bundle
 
-case class Entry(name: String) {
-  val creationTime = System.currentTimeMillis()
-  var done = false;
-  def setToUndone(): Unit = {
-    done = true
-  }
-  def setToDone(): Unit = {
-    done = false
-  }
-  def hasName(searchName: String): Boolean = name == searchName
+case class Entry(id: Int, var done: Boolean, var content: String) {
+  val creationTime: Long = System.currentTimeMillis()
+
+  def hasID(searchId: Int): Boolean = searchId == id
 }
 
 class EntryTemplate[Builder, Output <: FragT, FragT](val bundle: Bundle[Builder, Output, FragT]) {
 
   import bundle.all._
 
+  def entryDivTemplate(e: Entry) =
+    div(id := e.id)
+
   def entryTemplate(e: Entry) =
-    div(id := e.name)(
-      p(e.name)
+    p(e.content)
+
+  def entryInputTemplate(e: Entry) =
+    input(
+      id := e.id + "input",
+      tpe := "text",
+      value := e.content,
+      style := "border: none;"
     )
 
   def entryButtonTemplate(e: Entry) =
-    if (e.done) button("Mark as undone")
+    if (e.done) button("Mark as to do")
     else button("Mark as done")
 
   def entrysTemplate(es: Seq[Entry]) =
     div(
       es.map(entryTemplate)
     )
-  def entriesViewTemplate() =
+  def entriesViewTemplate(projectName: String) =
     div(
-      div(id := "entries"),
+      h2(projectName),
+      div(id := "entries") (
+        h3("To do"),
+        div(id := "undoneEntries"),
+        h3("Done"),
+        div(id := "doneEntries")
+      ),
+      br(),
       div(
         input(id := "entryName",
           tpe := "text",
           placeholder := "New Entry"),
         button(id := "addEntry", "Add")
       ),
-      div(id := "entriesMessageBox"),
+      br(),
       button(id := "backToProjects", "Back to projects")
     )
 }

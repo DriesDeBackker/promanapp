@@ -11,13 +11,14 @@ import org.scalajs.dom.raw._
 import scalatags.Text.all._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
+import scalatags.Text
 
 object ProManApp {
 
   def main(args: Array[String]): Unit = {
 
     var frontEndProjects: Seq[Project] = Seq()
-    def getProject(name: String): Project = frontEndProjects.filter(_.hasName(name)).head
+    //def getProject(name: String): Project = frontEndProjects.filter(_.hasName(name)).head
 
     var contentBox = dom.document.body .querySelector("#content")
     val projectUi = new ProjectTemplate(scalatags.JsDom)
@@ -27,22 +28,54 @@ object ProManApp {
     def getButtonElement(id: String) = getHTMLElement(id).asInstanceOf[HTMLButtonElement]
     def getInputElement(id: String) = getHTMLElement(id).asInstanceOf[HTMLInputElement]
 
+    var doneHidden = false;
+    var todoHidden = false;
+
     def goToEntries(projectName: String): Unit = {
       contentBox.innerHTML = ""
-      contentBox.appendChild(entryUi.entriesViewTemplate().render)
+      contentBox.appendChild(entryUi.entriesViewTemplate(projectName).render)
       getButtonElement("backToProjects").onclick = (ev: Event) =>
         goToProjects()
       getButtonElement("addEntry").onclick = (ev: Event) =>
         addEntry(projectName)
+      /*getHTMLElement("undoneEntries").asInstanceOf[HTMLDivElement].onclick = (ev: Event) =>
+        toggleUnDone(projectName)
+      getHTMLElement("doneEntries").asInstanceOf[HTMLDivElement].onclick = (ev: Event) =>
+        toggleDone(projectName)*/
       updateEntries(projectName)
+      clearWarning()
     }
+
+    /*
+    def toggleDone(projectName: String): Unit = {
+      if (doneHidden) {
+        doneHidden = false
+        updateEntries(projectName)
+      } else {
+        doneHidden = true
+        getHTMLElement("doneEntries").innerHTML = ""
+      }
+    }
+
+    def toggleUnDone(projectName: String): Unit = {
+      if (todoHidden) {
+        todoHidden = false;
+        updateEntries(projectName)
+      } else {
+        todoHidden = true;
+        getHTMLElement("undoneEntries").innerHTML = ""
+      }
+    }*/
 
     def goToProjects(): Unit = {
       contentBox.innerHTML = ""
       contentBox.appendChild(projectUi.projectsViewTemplate().render)
       getButtonElement("addProject").onclick = (ev: Event) =>
         addProject()
+      getInputElement("projectName").onclick = (ev: Event) =>
+        clearWarning()
       updateProjects()
+      clearWarning()
     }
 
     goToProjects()
@@ -75,63 +108,112 @@ object ProManApp {
           entriesM match {
             case Left(err) => dom.window.alert(err.toString)
             case Right(entries) =>
-              val project:Project = frontEndProjects.filter(_.hasName(projectName)).head
-              project.entries = entries
-              val entryTarget = getHTMLElement("entries")
-              entryTarget.innerHTML = ""
+              val doneEntriesTarget = getHTMLElement("doneEntries")
+              doneEntriesTarget.innerHTML=""
+              val undoneEntriesTarget = getHTMLElement("undoneEntries")
+              undoneEntriesTarget.innerHTML=""
               for (entry <- entries) {
-                val entryDiv: Element = entryUi.entryTemplate(entry).render
+                val entryDiv: Element = entryUi.entryDivTemplate(entry).render
+                val entryInput: Element = entryUi.entryInputTemplate(entry).render
                 val entryButton: Element = entryUi.entryButtonTemplate(entry).render
+                entryInput.asInstanceOf[HTMLInputElement].onchange = (ev: Event) =>
+                  changeEntryContent(projectName, entry.id, entryInput.asInstanceOf[HTMLInputElement].value)
+                entryDiv.appendChild(entryInput)
                 entryDiv.appendChild(entryButton)
-                if (entry.done) entryButton.asInstanceOf[HTMLButtonElement].onclick = (ev:Event) => {
-                  entry.setToUndone()
-                  updateEntry(projectName, entry.name)
+                if (entry.done) {
+                  doneEntriesTarget.appendChild(entryDiv)
+                  entryButton.asInstanceOf[HTMLButtonElement].onclick = (ev:Event) => {
+                    markAsUnDone(projectName, entry.id)
+                  }
                 }
-                else entryButton.asInstanceOf[HTMLButtonElement].onclick = (ev:Event) => {
-                  entry.setToDone()
-                  updateEntry(projectName, entry.name)
+                else {
+                  undoneEntriesTarget.appendChild(entryDiv)
+                  entryButton.asInstanceOf[HTMLButtonElement].onclick = (ev:Event) => {
+                    markAsDone(projectName, entry.id)
+                  }
                 }
-                entryTarget.appendChild(entryDiv)
               }
           }
         case Failure(err) => dom.window.alert(err.toString)
       }
 
+    def warn(warning: String) = getHTMLElement("warningBox").innerHTML = warning
+    def clearWarning() = getHTMLElement("warningBox").innerHTML = ""
+
+    def checkProjectName(projectName: String): (Boolean, String) = {
+      if (projectName == "") (false, "No name specified.")
+      else if (frontEndProjects.exists(_.name == projectName)) (false, "This name is already in use.")
+      else (true, "")
+    }
+
     def addProject(): Unit = {
       val projectNameEl = getInputElement("projectName")
       val projectName = projectNameEl.value
-      Ajax
-        .post("/service/project", Project(projectName).asJson.noSpaces)
-        .onComplete {
-          case Success(xhr) =>
-            projectNameEl.value = ""
-            // This is a very, VERY crappy way of updating, don't do this in
-            // your  project, come up with something that doesn't redraw the entire tree!
-            updateProjects()
-          case Failure(err) => dom.window.alert(err.toString)
-        }
+      val checkNameResponse = checkProjectName(projectName)
+      val accepted = checkNameResponse._1
+      val error = checkNameResponse._2
+      if (accepted) {
+        Ajax
+          .post("/service/project", Project(projectName).asJson.noSpaces)
+          .onComplete {
+            case Success(xhr) =>
+              projectNameEl.value = ""
+              // This is a very, VERY crappy way of updating, don't do this in
+              // your  project, come up with something that doesn't redraw the entire tree!
+              updateProjects()
+            case Failure(err) => warn(err.toString)
+          }
+      } else warn(error)
+    }
+
+    def checkEntityContent(entityContent: String): (Boolean, String) = {
+      if (entityContent == "") (false, "Insert content.")
+      else (true, "")
     }
 
     def addEntry(projectName: String): Unit = {
-      val entryNameEl = getInputElement("entryName")
-      val entryName = entryNameEl.value
+      val entryContentEl = getInputElement("entryName")
+      val entryContent = entryContentEl.value
+      val checkContentResponse = checkEntityContent(entryContent)
+      val accepted = checkContentResponse._1
+      val error = checkContentResponse._2
+      if (accepted) {
+        Ajax
+          .post("/service/project/" + projectName + "/add/" + entryContent, "")
+          .onComplete {
+            case Success(xhr) =>
+              entryContentEl.value = ""
+              // This is a very, VERY crappy way of updating, don't do this in
+              // your  project, come up with something that doesn't redraw the entire tree!
+              updateEntries(projectName)
+            case Failure(err) => warn(err.toString)
+          }
+      } else warn(error)
+    }
+
+    def markAsDone(projectName:String, entryId:Int): Unit = {
       Ajax
-        .post("/service/project/" + projectName + "/add",
-          Entry(entryName).asJson.noSpaces)
+        .post("/service/project/" + projectName + "/" + entryId + "/markasdone","")
         .onComplete {
           case Success(xhr) =>
-            entryNameEl.value = ""
-            // This is a very, VERY crappy way of updating, don't do this in
-            // your  project, come up with something that doesn't redraw the entire tree!
             updateEntries(projectName)
           case Failure(err) => dom.window.alert(err.toString)
         }
     }
 
-    def updateEntry(projectName:String, entryName:String): Unit = {
+    def markAsUnDone(projectName:String, entryId:Int): Unit = {
       Ajax
-        .post("/service/project/" + projectName + "/update",
-          getProject(projectName).getEntry(entryName).asJson.noSpaces)
+        .post("/service/project/" + projectName + "/" + entryId + "/markasundone", "")
+        .onComplete {
+          case Success(xhr) =>
+            updateEntries(projectName)
+          case Failure(err) => dom.window.alert(err.toString)
+        }
+    }
+
+    def changeEntryContent(projectName:String, entryId:Int, entryContent: String): Unit = {
+      Ajax
+        .post("/service/project/" + projectName + "/" + entryId + "/changecontent/" + entryContent)
         .onComplete {
           case Success(xhr) =>
             updateEntries(projectName)

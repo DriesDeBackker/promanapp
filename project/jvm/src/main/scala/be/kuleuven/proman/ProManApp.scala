@@ -19,14 +19,15 @@ object ProManApp extends App {
   // Step 1: Create a list of Projects, other extensions are to change the case class
   // itself and expand upon its current definition.
   val project = Project("project1")
-  var entry2 = Entry("entry 2")
-  entry2.setToDone()
-  project.entries = Seq(Entry("entry 1"), entry2)
+  var entry1 = Entry(1, done=true, "entry 1")
+  var entry2 = Entry(2, done=false, "entry 2")
+  project.entries = Seq(entry1, entry2)
   var projects: Seq[Project] = Seq(project)
+
   def getProject(name: String): Project = projects.filter(_.hasName(name)).head
 
   def hasName(name: String)(p: Project): Boolean = p.name == name
-  def hasEntryName(name: String)(e: Entry): Boolean = e.name == name
+  def hasId(id: Int)(e: Entry): Boolean = e.id == id
 
   def serveFrag(tag: Frag) = Ok(tag.render).withType(MediaType.`text/html`)
 
@@ -64,17 +65,32 @@ object ProManApp extends App {
         response
       }
 
-    case req @ POST -> Root / "service" / "project" / projectName / "add" =>
-      val project: Project = projects.filter(hasName(projectName)).head
-      for {
-        entry <- req.as(jsonOf[Entry])
-        response <- Ok(entry.name.asJson)
-      } yield {
-        project.addEntry(entry)
-        response
-      }
+    case req @ POST -> Root / "service" / "project" / projectName / "add" / entryContent =>
+      val project = getProject(projectName)
+      val entry = Entry(project.entries.size+1, done = false, entryContent)
+      project.addEntry(entry)
+      Ok(entry.id.asJson)
 
-    case req @ POST -> Root / "service" / "project" / projectName / "update" =>
+    case req @ POST -> Root / "service" / "project" / projectName / entryId / "markasdone" =>
+      val project = getProject(projectName)
+      val entry = project.getEntry(entryId.toInt)
+      entry.done = true
+      Ok(entry.asJson)
+
+    case req @ POST -> Root / "service" / "project" / projectName / entryId / "markasundone" =>
+      val project = getProject(projectName)
+      val entry = project.getEntry(entryId.toInt)
+      entry.done = false
+      Ok(entry.asJson)
+
+    case req @ POST -> Root / "service" / "project" / projectName / entryId / "changecontent" / entryContent =>
+      val project = getProject(projectName)
+      val entry = project.getEntry(entryId.toInt)
+      entry.content = entryContent
+      Ok(entry.asJson)
+
+
+    /*case req @ POST -> Root / "service" / "project" / projectName / "update" =>
       val project: Project = projects.filter(hasName(projectName)).head
       for {
         entry <- req.as(jsonOf[Entry])
@@ -82,15 +98,16 @@ object ProManApp extends App {
       } yield {
         project.updateEntry(entry)
         response
-      }
+      }*/
 
     case GET -> Root / "jsprojects" =>
       serveFrag(
         html(
           head(),
           body(h1("Projects"),
-               div(id := "content"),
-               script(src := "/jsprogram"))
+            div(id := "content"),
+            div(id := "warningBox"),
+            script(src := "/jsprogram"))
         )
       )
   }
