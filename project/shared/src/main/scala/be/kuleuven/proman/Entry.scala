@@ -23,7 +23,8 @@ class EntryTemplate[Builder, Output <: FragT, FragT](val bundle: Bundle[Builder,
       id := e.id + "input",
       tpe := "text",
       value := e.content,
-      style := "border: none;"
+      border := "none",
+      background := "transparent"
     )
 
   def entryButtonTemplate(e: Entry) =
@@ -36,12 +37,41 @@ class EntryTemplate[Builder, Output <: FragT, FragT](val bundle: Bundle[Builder,
     )
   def entriesViewTemplate(projectName: String) =
     div(
-      h2(projectName),
-      div(id := "entries") (
-        h3("To do"),
-        div(id := "undoneEntries"),
-        h3("Done"),
-        div(id := "doneEntries")
+      textAlign := "center",
+      padding := "30px",
+      backgroundColor:= "grey")(
+      h2(
+        projectName,
+        textTransform := "uppercase"),
+      div(
+        id := "entries",
+        display := "flex",
+        justifyContent := "center") (
+        div(
+          margin := "5px",
+          padding := "10px",
+          width := "400px",
+          backgroundColor := "deepskyblue")(
+          div (
+            id := "undoneEntriesTitle",
+            textAlign :="center",
+            cursor := "pointer")(
+            h3("To do")
+          ),
+          div(id := "undoneEntries")
+        ),
+        div(
+          margin := "5px",
+          padding := "10px",
+          width := "400px",
+          backgroundColor := "deepskyblue")(
+          div (
+            id := "doneEntriesTitle",
+            textAlign:="center", cursor := "pointer")(
+            h3("Done")
+          ),
+          div(id := "doneEntries")
+        )
       ),
       br(),
       div(

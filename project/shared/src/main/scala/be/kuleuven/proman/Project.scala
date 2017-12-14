@@ -32,7 +32,15 @@ class ProjectTemplate[Builder, Output <: FragT, FragT](
   import bundle.all._
 
   def projectTemplate(p: Project) =
-    div(id := p.name, p.name)
+    div(id := p.name, p.name,
+      width := "100px",
+      height := "90px",
+      backgroundColor := "grey",
+      margin := "10px",
+      padding := "5px",
+      color := "white",
+      lineHeight := "90px",
+      cursor := "pointer")
 
   def projectsTemplate(pjs: Seq[Project]) =
     div(
@@ -40,7 +48,12 @@ class ProjectTemplate[Builder, Output <: FragT, FragT](
     )
   def projectsViewTemplate() =
     div(
-      div(id := "projects"),
+      textAlign := "center",
+      padding := "30px")(
+      div(id := "projects",
+        display := "flex",
+        justifyContent := "center"),
+      br(),
       div(
         input(id := "projectName",
           tpe := "text",

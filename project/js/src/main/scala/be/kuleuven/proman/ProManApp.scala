@@ -28,44 +28,47 @@ object ProManApp {
     def getButtonElement(id: String) = getHTMLElement(id).asInstanceOf[HTMLButtonElement]
     def getInputElement(id: String) = getHTMLElement(id).asInstanceOf[HTMLInputElement]
 
-    var doneHidden = false;
-    var todoHidden = false;
+    var doneHidden = false
+    var todoHidden = false
 
     def goToEntries(projectName: String): Unit = {
+      doneHidden = false
+      todoHidden = false
       contentBox.innerHTML = ""
       contentBox.appendChild(entryUi.entriesViewTemplate(projectName).render)
       getButtonElement("backToProjects").onclick = (ev: Event) =>
         goToProjects()
       getButtonElement("addEntry").onclick = (ev: Event) =>
         addEntry(projectName)
-      /*getHTMLElement("undoneEntries").asInstanceOf[HTMLDivElement].onclick = (ev: Event) =>
+      getHTMLElement("undoneEntriesTitle").asInstanceOf[HTMLDivElement].onclick = (ev: Event) =>
         toggleUnDone(projectName)
-      getHTMLElement("doneEntries").asInstanceOf[HTMLDivElement].onclick = (ev: Event) =>
-        toggleDone(projectName)*/
+      getHTMLElement("doneEntriesTitle").asInstanceOf[HTMLDivElement].onclick = (ev: Event) =>
+        toggleDone(projectName)
+      getInputElement("entryName").onclick = (ev: Event) =>
+        clearWarning()
       updateEntries(projectName)
       clearWarning()
     }
 
-    /*
     def toggleDone(projectName: String): Unit = {
       if (doneHidden) {
         doneHidden = false
-        updateEntries(projectName)
+        getHTMLElement("doneEntries").setAttribute("style", "display:block;")
       } else {
         doneHidden = true
-        getHTMLElement("doneEntries").innerHTML = ""
+        getHTMLElement("doneEntries").setAttribute("style", "display:none;")
       }
     }
 
     def toggleUnDone(projectName: String): Unit = {
       if (todoHidden) {
         todoHidden = false;
-        updateEntries(projectName)
+        getHTMLElement("undoneEntries").setAttribute("style", "display:block")
       } else {
         todoHidden = true;
-        getHTMLElement("undoneEntries").innerHTML = ""
+        getHTMLElement("undoneEntries").setAttribute("style", "display:none;")
       }
-    }*/
+    }
 
     def goToProjects(): Unit = {
       contentBox.innerHTML = ""

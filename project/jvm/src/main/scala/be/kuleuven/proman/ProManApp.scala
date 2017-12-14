@@ -89,24 +89,18 @@ object ProManApp extends App {
       entry.content = entryContent
       Ok(entry.asJson)
 
-
-    /*case req @ POST -> Root / "service" / "project" / projectName / "update" =>
-      val project: Project = projects.filter(hasName(projectName)).head
-      for {
-        entry <- req.as(jsonOf[Entry])
-        response <- Ok(entry.name.asJson)
-      } yield {
-        project.updateEntry(entry)
-        response
-      }*/
-
     case GET -> Root / "jsprojects" =>
       serveFrag(
         html(
           head(),
-          body(h1("Projects"),
+          body(fontFamily :="Arial, Helvetica, sans-serif;")(
+            h1("Projects",
+              textAlign := "center",
+              textTransform := "uppercase"),
             div(id := "content"),
-            div(id := "warningBox"),
+            br(),
+            div(id := "warningBox",
+              textAlign := "center"),
             script(src := "/jsprogram"))
         )
       )
