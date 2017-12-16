@@ -3,7 +3,6 @@ package be.kuleuven.proman
 import scalatags.generic.Bundle
 
 case class Entry(id: Int, var done: Boolean, var content: String) {
-  val creationTime: Long = System.currentTimeMillis()
 
   def hasID(searchId: Int): Boolean = searchId == id
 }
@@ -12,15 +11,15 @@ class EntryTemplate[Builder, Output <: FragT, FragT](val bundle: Bundle[Builder,
 
   import bundle.all._
 
-  def entryDivTemplate(e: Entry) =
-    div(id := e.id)
+  def entryDivTemplate(boardName: String, e: Entry) =
+    div(id := boardName + e.id)
 
   def entryTemplate(e: Entry) =
     p(e.content)
 
-  def entryInputTemplate(e: Entry) =
+  def entryInputTemplate(boardName: String, e: Entry) =
     input(
-      id := e.id + "input",
+      id := boardName + e.id + "Input",
       tpe := "text",
       value := e.content,
       border := "none",
@@ -31,21 +30,16 @@ class EntryTemplate[Builder, Output <: FragT, FragT](val bundle: Bundle[Builder,
     if (e.done) button("Mark as to do")
     else button("Mark as done")
 
-  def entrysTemplate(es: Seq[Entry]) =
-    div(
-      es.map(entryTemplate)
-    )
-  def entriesViewTemplate(projectName: String) =
+  def boardTemplate(boardName: String) =
     div(
       textAlign := "center",
       padding := "30px",
-      backgroundColor:= "grey")(
-      h2(
-        projectName,
+      backgroundColor:= "green")(
+      h3(
+        boardName,
         textTransform := "uppercase"),
       div(
-        id := "entries",
-        display := "flex",
+        id := boardName + "Entries",
         justifyContent := "center") (
         div(
           margin := "5px",
@@ -53,12 +47,12 @@ class EntryTemplate[Builder, Output <: FragT, FragT](val bundle: Bundle[Builder,
           width := "400px",
           backgroundColor := "deepskyblue")(
           div (
-            id := "undoneEntriesTitle",
+            id := boardName + "TodoEntriesTitle",
             textAlign :="center",
             cursor := "pointer")(
-            h3("To do")
+            h4("To do")
           ),
-          div(id := "undoneEntries")
+          div(id := boardName+"TodoEntries")
         ),
         div(
           margin := "5px",
@@ -66,21 +60,19 @@ class EntryTemplate[Builder, Output <: FragT, FragT](val bundle: Bundle[Builder,
           width := "400px",
           backgroundColor := "deepskyblue")(
           div (
-            id := "doneEntriesTitle",
+            id := boardName + "DoneEntriesTitle",
             textAlign:="center", cursor := "pointer")(
-            h3("Done")
+            h4("Done")
           ),
-          div(id := "doneEntries")
+          div(id := boardName + "DoneEntries")
         )
       ),
       br(),
       div(
-        input(id := "entryName",
+        input(id := boardName + "EntryName",
           tpe := "text",
           placeholder := "New Entry"),
-        button(id := "addEntry", "Add")
-      ),
-      br(),
-      button(id := "backToProjects", "Back to projects")
+        button(id := boardName + "AddEntry", "Add")
+      )
     )
 }

@@ -16,13 +16,15 @@ import scalatags.Text.all._
 
 object ProManApp extends App {
 
-  // Step 1: Create a list of Projects, other extensions are to change the case class
-  // itself and expand upon its current definition.
-  val project = Project("project1")
+  //Build an example
   var entry1 = Entry(1, done=true, "entry 1")
   var entry2 = Entry(2, done=false, "entry 2")
-  project.entries = Seq(entry1, entry2)
-  var projects: Seq[Project] = Seq(project)
+  var board1 = Board("board1")
+  board1.addEntry(entry1)
+  board1.addEntry(entry2)
+  val project1 = Project("project1")
+  project1.addBoard(board1)
+  var projects: Seq[Project] = Seq(project1)
 
   def getProject(name: String): Project = projects.filter(_.hasName(name)).head
 
@@ -51,9 +53,14 @@ object ProManApp extends App {
 
     case GET -> Root / "service" / "project" => Ok(projects.asJson)
 
-    case GET -> Root / "service" / "project" / projectName =>
-      val project: Project = projects.filter(hasName(projectName)).head
-      Ok(project.entries.asJson)
+    case GET -> Root / "service" / "project" / projectName  =>
+      val project: Project = getProject(projectName)
+      Ok(project.boards.asJson)
+
+    case GET -> Root / "service" / "project" / projectName / boardName =>
+      val project: Project = getProject(projectName)
+      val board: Board = project.getBoard(boardName)
+      Ok(board.entries.asJson)
 
     case req @ POST -> Root / "service" / "project" =>
       for {
@@ -65,29 +72,56 @@ object ProManApp extends App {
         response
       }
 
-    case req @ POST -> Root / "service" / "project" / projectName / "add" / entryContent =>
+    case req @ POST -> Root / "service" / "project" / projectName / boardName / "add" / entryContent =>
       val project = getProject(projectName)
-      val entry = Entry(project.entries.size+1, done = false, entryContent)
-      project.addEntry(entry)
+      val board = project.getBoard(boardName)
+      val entry = Entry(board.entries.size+1, done = false, entryContent)
+      board.addEntry(entry)
       Ok(entry.id.asJson)
 
-    case req @ POST -> Root / "service" / "project" / projectName / entryId / "markasdone" =>
+    case req @ POST -> Root / "service" / "project" / projectName / boardName / entryId / "markasdone" =>
       val project = getProject(projectName)
-      val entry = project.getEntry(entryId.toInt)
+      val board = project.getBoard(boardName)
+      val entry = board.getEntry(entryId.toInt)
       entry.done = true
       Ok(entry.asJson)
 
-    case req @ POST -> Root / "service" / "project" / projectName / entryId / "markasundone" =>
+    case req @ POST -> Root / "service" / "project" / projectName / boardName / entryId / "markasundone" =>
       val project = getProject(projectName)
-      val entry = project.getEntry(entryId.toInt)
+      val board = project.getBoard(boardName)
+      val entry = board.getEntry(entryId.toInt)
       entry.done = false
       Ok(entry.asJson)
 
-    case req @ POST -> Root / "service" / "project" / projectName / entryId / "changecontent" / entryContent =>
+    case req @ POST -> Root / "service" / "project" / projectName / boardName / entryId / "changecontent" / entryContent =>
       val project = getProject(projectName)
-      val entry = project.getEntry(entryId.toInt)
+      val board = project.getBoard(boardName)
+      val entry = board.getEntry(entryId.toInt)
       entry.content = entryContent
       Ok(entry.asJson)
+
+    case req @ POST -> Root / "service" / "project" / projectName /  "add" =>
+      val project = getProject(projectName)
+      for {
+        board <- req.as(jsonOf[Board])
+        response <- Ok(board.asJson)
+      } yield {
+        project.addBoard(board)
+        println(project.boards)
+        response
+      }
+
+    case req @ POST -> Root / "service" / "project" / projectName / "changeboard" =>
+      val project = getProject(projectName)
+      for {
+        board <- req.as(jsonOf[Board])
+        response <- Ok(board.asJson)
+      } yield {
+        val storedBoard = project.getBoard(board.name)
+        storedBoard.name = board.name
+        println(project.boards)
+        response
+      }
 
     case GET -> Root / "jsprojects" =>
       serveFrag(

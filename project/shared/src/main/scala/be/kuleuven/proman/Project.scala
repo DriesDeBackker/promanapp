@@ -2,25 +2,19 @@ package be.kuleuven.proman
 
 import scalatags.generic.Bundle
 
-case class Project(name: String) {
-  var entries: Seq[Entry] = Seq()
+case class Project(var name: String) {
+  var boards: Seq[Board] = Seq()
 
-  def addEntry(entry: Entry): Unit = {
-    entries = entries :+ entry
+  def addBoard(board: Board): Unit = {
+    boards = boards :+ board
   }
 
-  def addNewEntry(entryContent: String): Unit = {
-    addEntry(Entry(entries.size+1, done = false, entryContent))
+  def addNewBoard(boardName: String): Unit = {
+    addBoard(Board(boardName))
   }
 
-  def updateEntry(entry: Entry): Unit = {
-    val storedEntry = getEntry(entry.id)
-    storedEntry.done = entry.done
-    storedEntry.content = entry.content
-  }
-
-  def getEntry(id: Int): Entry = {
-    entries.filter(_.hasID(id)).head
+  def getBoard(name: String): Board = {
+    boards.filter(_.hasName(name)).head
   }
 
   def hasName(searchName :String): Boolean = searchName == name
