@@ -142,20 +142,22 @@ object ProManApp {
                 val entryDiv: Element = entryUi.entryDivTemplate(boardName,entry).render
                 val entryInput: Element = entryUi.entryInputTemplate(boardName,entry).render
                 val entryButton: Element = entryUi.entryButtonTemplate(entry).render
-                entryInput.asInstanceOf[HTMLInputElement].onchange = (ev: Event) =>
-                  changeEntryContent(projectName, boardName, entry.id, entryInput.asInstanceOf[HTMLInputElement].value)
+                entryInput.asInstanceOf[HTMLInputElement].onchange = (ev: Event) => {
+                  updateEntry(projectName, boardName, Entry(entry.id, entry.done, entryInput.asInstanceOf[HTMLInputElement].value))
+                  //changeEntryContent(projectName, boardName, entry.id, entryInput.asInstanceOf[HTMLInputElement].value)
+                }
                 entryDiv.appendChild(entryInput)
                 entryDiv.appendChild(entryButton)
                 if (entry.done) {
                   doneEntriesTarget.appendChild(entryDiv)
                   entryButton.asInstanceOf[HTMLButtonElement].onclick = (ev:Event) => {
-                    markAsUnDone(projectName,boardName, entry.id)
+                    updateEntry(projectName,boardName,Entry(entry.id, done=false, entry.content))
                   }
                 }
                 else {
                   todoEntriesTarget.appendChild(entryDiv)
                   entryButton.asInstanceOf[HTMLButtonElement].onclick = (ev:Event) => {
-                    markAsDone(projectName, boardName, entry.id)
+                    updateEntry(projectName,boardName,Entry(entry.id, done=true, entry.content))
                   }
                 }
               }
@@ -244,7 +246,7 @@ object ProManApp {
     }
 
     //TODO: make the methods below into one.
-    def markAsDone(projectName:String, boardName: String, entryId:Int): Unit = {
+    /*def markAsDone(projectName:String, boardName: String, entryId:Int): Unit = {
       Ajax
         .post("/service/project/" + projectName + "/" + boardName + "/" + entryId + "/markasdone","")
         .onComplete {
@@ -267,6 +269,16 @@ object ProManApp {
     def changeEntryContent(projectName:String, boardName: String, entryId:Int, entryContent: String): Unit = {
       Ajax
         .post("/service/project/" + projectName + "/" + boardName + "/" + entryId + "/changecontent/" + entryContent)
+        .onComplete {
+          case Success(xhr) =>
+            updateEntries(projectName, boardName)
+          case Failure(err) => dom.window.alert(err.toString)
+        }
+    }*/
+
+    def updateEntry(projectName: String, boardName: String, entry: Entry): Unit = {
+      Ajax
+        .post("/service/project/" + projectName + "/" + boardName + "/updateentry", entry.asJson.noSpaces)
         .onComplete {
           case Success(xhr) =>
             updateEntries(projectName, boardName)

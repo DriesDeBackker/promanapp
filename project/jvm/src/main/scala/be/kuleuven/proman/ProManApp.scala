@@ -100,6 +100,18 @@ object ProManApp extends App {
       entry.content = entryContent
       Ok(entry.asJson)
 
+    case req @ POST -> Root / "service" / "project" / projectName / boardName / "updateentry" =>
+      val project = getProject(projectName)
+      val board = project.getBoard(boardName)
+      for {
+        entry <- req.as(jsonOf[Entry])
+        response <- Ok(entry.asJson)
+      } yield {
+        board.updateEntry(entry)
+        println(board.entries)
+        response
+      }
+
     case req @ POST -> Root / "service" / "project" / projectName /  "add" =>
       val project = getProject(projectName)
       for {

@@ -13,6 +13,12 @@ case class Board(var name: String) {
     addEntry(Entry(entries.size+1, done = false, entryContent))
   }
 
+  def updateEntry(entry: Entry): Unit = {
+    val storedEntry = getEntry(entry.id)
+    storedEntry.done = entry.done
+    storedEntry.content = entry.content
+  }
+
   def getEntry(id: Int): Entry = {
     entries.filter(_.hasID(id)).head
   }
@@ -27,7 +33,7 @@ class BoardTemplate[Builder, Output <: FragT, FragT](
 
   def boardsViewTemplate(projectName: String) =
     div(id := projectName,
-      backgroundColor:= "grey"
+      backgroundColor:= "grey",
       h2(projectName,
         textTransform := "uppercase"),
       textAlign := "center",

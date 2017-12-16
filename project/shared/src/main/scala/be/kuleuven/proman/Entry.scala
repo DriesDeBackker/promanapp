@@ -33,8 +33,9 @@ class EntryTemplate[Builder, Output <: FragT, FragT](val bundle: Bundle[Builder,
   def boardTemplate(boardName: String) =
     div(
       textAlign := "center",
+      margin := "15x",
       padding := "30px",
-      backgroundColor:= "green")(
+      backgroundColor := "green")(
       h3(
         boardName,
         textTransform := "uppercase"),
