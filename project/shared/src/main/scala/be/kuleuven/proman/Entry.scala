@@ -2,7 +2,7 @@ package be.kuleuven.proman
 
 import scalatags.generic.Bundle
 
-case class Entry(id: Int, var done: Boolean, var content: String) {
+case class Entry(id: Int, date: String, var done: Boolean, var content: String) {
 
   def hasID(searchId: Int): Boolean = searchId == id
 }
@@ -12,10 +12,17 @@ class EntryTemplate[Builder, Output <: FragT, FragT](val bundle: Bundle[Builder,
   import bundle.all._
 
   def entryDivTemplate(boardName: String, e: Entry) =
-    div(id := boardName + e.id)
+    div(id := boardName + e.id,
+      display:= "flex")
 
   def entryTemplate(e: Entry) =
-    p(e.content)
+    p(e.content, fontSize := "10px")
+
+  def entryDateTemplate(boardName: String, e: Entry) =
+    div(e.date,
+      width:="70px",
+      padding:= "6px",
+      fontSize:="11px")
 
   def entryInputTemplate(boardName: String, e: Entry) =
     input(
@@ -33,7 +40,7 @@ class EntryTemplate[Builder, Output <: FragT, FragT](val bundle: Bundle[Builder,
   def boardTemplate(boardName: String) =
     div(
       textAlign := "center",
-      margin := "15x",
+      margin := "15px",
       padding := "30px",
       backgroundColor := "green")(
       h3(
@@ -53,7 +60,8 @@ class EntryTemplate[Builder, Output <: FragT, FragT](val bundle: Bundle[Builder,
             cursor := "pointer")(
             h4("To do")
           ),
-          div(id := boardName+"TodoEntries")
+          div(id := boardName+"TodoEntries",
+              visibility := "visible")
         ),
         div(
           margin := "5px",
@@ -65,7 +73,8 @@ class EntryTemplate[Builder, Output <: FragT, FragT](val bundle: Bundle[Builder,
             textAlign:="center", cursor := "pointer")(
             h4("Done")
           ),
-          div(id := boardName + "DoneEntries")
+          div(id := boardName + "DoneEntries",
+              visibility := "visible")
         )
       ),
       br(),

@@ -1,6 +1,7 @@
 package be.kuleuven.proman
 
 import java.io.File
+import java.util.Calendar
 
 import fs2.Task
 import fs2.interop.cats._
@@ -17,11 +18,7 @@ import scalatags.Text.all._
 object ProManApp extends App {
 
   //Build an example
-  var entry1 = Entry(1, done=true, "entry 1")
-  var entry2 = Entry(2, done=false, "entry 2")
   var board1 = Board("board1")
-  board1.addEntry(entry1)
-  board1.addEntry(entry2)
   val project1 = Project("project1")
   project1.addBoard(board1)
   var projects: Seq[Project] = Seq(project1)
@@ -75,29 +72,7 @@ object ProManApp extends App {
     case req @ POST -> Root / "service" / "project" / projectName / boardName / "add" / entryContent =>
       val project = getProject(projectName)
       val board = project.getBoard(boardName)
-      val entry = Entry(board.entries.size+1, done = false, entryContent)
-      board.addEntry(entry)
-      Ok(entry.id.asJson)
-
-    case req @ POST -> Root / "service" / "project" / projectName / boardName / entryId / "markasdone" =>
-      val project = getProject(projectName)
-      val board = project.getBoard(boardName)
-      val entry = board.getEntry(entryId.toInt)
-      entry.done = true
-      Ok(entry.asJson)
-
-    case req @ POST -> Root / "service" / "project" / projectName / boardName / entryId / "markasundone" =>
-      val project = getProject(projectName)
-      val board = project.getBoard(boardName)
-      val entry = board.getEntry(entryId.toInt)
-      entry.done = false
-      Ok(entry.asJson)
-
-    case req @ POST -> Root / "service" / "project" / projectName / boardName / entryId / "changecontent" / entryContent =>
-      val project = getProject(projectName)
-      val board = project.getBoard(boardName)
-      val entry = board.getEntry(entryId.toInt)
-      entry.content = entryContent
+      val entry = board.addNewEntry(entryContent)
       Ok(entry.asJson)
 
     case req @ POST -> Root / "service" / "project" / projectName / boardName / "updateentry" =>

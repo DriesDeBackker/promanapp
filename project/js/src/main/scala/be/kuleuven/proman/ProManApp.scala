@@ -17,6 +17,8 @@ object ProManApp {
 
   def main(args: Array[String]): Unit = {
 
+    var view = "init"
+
     var frontEndProjects: Seq[Project] = Seq()
     def getProject(name: String): Project = frontEndProjects.filter(_.hasName(name)).head
 
@@ -29,50 +31,22 @@ object ProManApp {
     def getButtonElement(id: String) = getHTMLElement(id).asInstanceOf[HTMLButtonElement]
     def getInputElement(id: String) = getHTMLElement(id).asInstanceOf[HTMLInputElement]
 
-    /*var doneHidden = false
-    var todoHidden = false*/
-
     def goToBoards(projectName: String): Unit = {
-      /*doneHidden = false
-      todoHidden = false*/
+      view = projectName
       contentBox.innerHTML = ""
       contentBox.appendChild(boardUi.boardsViewTemplate(projectName).render)
       getButtonElement("addBoard").onclick = (ev: Event) =>
         addBoard(projectName)
       getButtonElement("backToProjects").onclick = (ev: Event) =>
         goToProjects()
-      /*getHTMLElement("undoneEntriesTitle").asInstanceOf[HTMLDivElement].onclick = (ev: Event) =>
-        toggleUnDone(projectName)
-      getHTMLElement("doneEntriesTitle").asInstanceOf[HTMLDivElement].onclick = (ev: Event) =>
-        toggleDone(projectName)*/
       getInputElement("boardName").onclick = (ev: Event) =>
         clearWarning()
       updateBoards(projectName)
       clearWarning()
     }
 
-    /*
-    def toggleDone(projectName: String): Unit = {
-      if (doneHidden) {
-        doneHidden = false
-        getHTMLElement("doneEntries").setAttribute("style", "display:block;")
-      } else {
-        doneHidden = true
-        getHTMLElement("doneEntries").setAttribute("style", "display:none;")
-      }
-    }
-
-    def toggleUnDone(projectName: String): Unit = {
-      if (todoHidden) {
-        todoHidden = false;
-        getHTMLElement("undoneEntries").setAttribute("style", "display:block")
-      } else {
-        todoHidden = true;
-        getHTMLElement("undoneEntries").setAttribute("style", "display:none;")
-      }
-    }*/
-
     def goToProjects(): Unit = {
+      view = "projects"
       contentBox.innerHTML = ""
       contentBox.appendChild(projectUi.projectsViewTemplate().render)
       getButtonElement("addProject").onclick = (ev: Event) =>
@@ -117,6 +91,10 @@ object ProManApp {
               for (board <- boards) {
                 val boardElement: Element = entryUi.boardTemplate(board.name).render
                 boardsTarget.appendChild(boardElement)
+                getHTMLElement(board.name + "TodoEntriesTitle").asInstanceOf[HTMLElement].onclick = (ev: Event) =>
+                  toggleVisibility(getHTMLElement(board.name+"TodoEntries"))
+                getHTMLElement(board.name + "DoneEntriesTitle").asInstanceOf[HTMLElement].onclick = (ev: Event) =>
+                  toggleVisibility(getHTMLElement(board.name+"DoneEntries"))
                 getButtonElement(board.name + "AddEntry").onclick = (ev: Event) =>
                   addEntry(projectName, board.name)
                 updateEntries(projectName, board.name)
@@ -140,24 +118,25 @@ object ProManApp {
               todoEntriesTarget.innerHTML=""
               for (entry <- entries) {
                 val entryDiv: Element = entryUi.entryDivTemplate(boardName,entry).render
+                val entryDate: Element = entryUi.entryDateTemplate(boardName,entry).render
                 val entryInput: Element = entryUi.entryInputTemplate(boardName,entry).render
                 val entryButton: Element = entryUi.entryButtonTemplate(entry).render
                 entryInput.asInstanceOf[HTMLInputElement].onchange = (ev: Event) => {
-                  updateEntry(projectName, boardName, Entry(entry.id, entry.done, entryInput.asInstanceOf[HTMLInputElement].value))
-                  //changeEntryContent(projectName, boardName, entry.id, entryInput.asInstanceOf[HTMLInputElement].value)
+                  updateEntry(projectName, boardName, Entry(entry.id, entry.date,entry.done, entryInput.asInstanceOf[HTMLInputElement].value))
                 }
+                entryDiv.appendChild(entryDate)
                 entryDiv.appendChild(entryInput)
                 entryDiv.appendChild(entryButton)
                 if (entry.done) {
                   doneEntriesTarget.appendChild(entryDiv)
                   entryButton.asInstanceOf[HTMLButtonElement].onclick = (ev:Event) => {
-                    updateEntry(projectName,boardName,Entry(entry.id, done=false, entry.content))
+                    updateEntry(projectName,boardName,Entry(entry.id, entry.date, done=false, entry.content))
                   }
                 }
                 else {
                   todoEntriesTarget.appendChild(entryDiv)
                   entryButton.asInstanceOf[HTMLButtonElement].onclick = (ev:Event) => {
-                    updateEntry(projectName,boardName,Entry(entry.id, done=true, entry.content))
+                    updateEntry(projectName,boardName,Entry(entry.id, entry.date, done=true, entry.content))
                   }
                 }
               }
@@ -170,6 +149,7 @@ object ProManApp {
 
     def checkProjectName(projectName: String): (Boolean, String) = {
       if (projectName == "") (false, "No name specified.")
+      else if (projectName.contains(" ")) (false, "No spaces allowed")
       else if (frontEndProjects.exists(_.name == projectName)) (false, "This name is already in use.")
       else (true, "")
     }
@@ -186,8 +166,6 @@ object ProManApp {
           .onComplete {
             case Success(xhr) =>
               projectNameEl.value = ""
-              // This is a very, VERY crappy way of updating, don't do this in
-              // your  project, come up with something that doesn't redraw the entire tree!
               updateProjects()
             case Failure(err) => warn(err.toString)
           }
@@ -196,6 +174,7 @@ object ProManApp {
 
     def checkBoardName(projectName: String, boardName:String): (Boolean, String) = {
       if (boardName == "") (false, "No name specified")
+      else if (boardName.contains(" ")) (false, "No spaces allowed")
       else if (getProject(projectName).boards.exists(_.name == boardName)) (false, "This name is already in use.")
       else (true, "")
     }
@@ -208,13 +187,21 @@ object ProManApp {
       val error = checkNameResponse._2
       if (accepted) {
         Ajax
-          .post("/service/project/" + projectName + "/add", Board(boardName).asJson.noSpaces)
+          .post("/service/project/" + projectName + "/add",
+            Board(boardName).asJson.noSpaces)
           .onComplete {
             case Success(xhr) =>
               boardNameEl.value = ""
-              // This is a very, VERY crappy way of updating, don't do this in
-              // your  project, come up with something that doesn't redraw the entire tree!
-              updateBoards(projectName)
+              val boardsTarget = getHTMLElement("boards")
+              val boardElement: Element = entryUi.boardTemplate(boardName).render
+              boardsTarget.appendChild(boardElement)
+              getHTMLElement(boardName + "TodoEntriesTitle").asInstanceOf[HTMLElement].onclick = (ev: Event) =>
+                toggleVisibility(getHTMLElement(boardName+"TodoEntries"))
+              getHTMLElement(boardName + "DoneEntriesTitle").asInstanceOf[HTMLElement].onclick = (ev: Event) =>
+                toggleVisibility(getHTMLElement(boardName+"DoneEntries"))
+              getButtonElement(boardName + "AddEntry").onclick = (ev: Event) =>
+                addEntry(projectName, boardName)
+              updateEntries(projectName, boardName)
             case Failure(err) => warn(err.toString)
           }
       } else warn(error)
@@ -223,6 +210,13 @@ object ProManApp {
     def checkEntityContent(entityContent: String): (Boolean, String) = {
       if (entityContent == "") (false, "Insert content.")
       else (true, "")
+    }
+
+    def toggleVisibility(element: Element): Unit = {
+      var style: String = element.getAttribute("style")
+      if (style.contains("visibility: hidden")) style = style.replace("hidden", "visible")
+      else if (style.contains("visibility: visible")) style = style.replace("visible", "hidden")
+      element.setAttribute("style", style)
     }
 
     def addEntry(projectName: String, boardName: String): Unit = {
@@ -236,45 +230,11 @@ object ProManApp {
           .post("/service/project/" + projectName + "/" + boardName + "/add/" + entryContent, "")
           .onComplete {
             case Success(xhr) =>
-              entryContentEl.value = ""
-              // This is a very, VERY crappy way of updating, don't do this in
-              // your  project, come up with something that doesn't redraw the entire tree!
-              updateEntries(projectName,boardName)
+              updateEntries(projectName, boardName)
             case Failure(err) => warn(err.toString)
           }
       } else warn(error)
     }
-
-    //TODO: make the methods below into one.
-    /*def markAsDone(projectName:String, boardName: String, entryId:Int): Unit = {
-      Ajax
-        .post("/service/project/" + projectName + "/" + boardName + "/" + entryId + "/markasdone","")
-        .onComplete {
-          case Success(xhr) =>
-            updateEntries(projectName, boardName)
-          case Failure(err) => dom.window.alert(err.toString)
-        }
-    }
-
-    def markAsUnDone(projectName:String, boardName:String, entryId:Int): Unit = {
-      Ajax
-        .post("/service/project/" + projectName + "/" + boardName + "/" + entryId + "/markasundone", "")
-        .onComplete {
-          case Success(xhr) =>
-            updateEntries(projectName, boardName)
-          case Failure(err) => dom.window.alert(err.toString)
-        }
-    }
-
-    def changeEntryContent(projectName:String, boardName: String, entryId:Int, entryContent: String): Unit = {
-      Ajax
-        .post("/service/project/" + projectName + "/" + boardName + "/" + entryId + "/changecontent/" + entryContent)
-        .onComplete {
-          case Success(xhr) =>
-            updateEntries(projectName, boardName)
-          case Failure(err) => dom.window.alert(err.toString)
-        }
-    }*/
 
     def updateEntry(projectName: String, boardName: String, entry: Entry): Unit = {
       Ajax
@@ -286,10 +246,18 @@ object ProManApp {
         }
     }
 
-    def run(): Unit = {
-      goToProjects()
+    goToProjects()
+    import scala.scalajs.js.timers._
+    def run(){
+      setTimeout(10000) {
+        if (view == "projects") {
+          updateProjects()
+        } else {
+          updateBoards(view)
+        }
+        run()
+      }
     }
-
     run()
   }
 }

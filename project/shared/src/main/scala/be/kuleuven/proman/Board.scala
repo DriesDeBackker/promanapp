@@ -1,5 +1,7 @@
 package be.kuleuven.proman
 
+import java.util.Calendar
+
 import scalatags.generic.Bundle
 
 case class Board(var name: String) {
@@ -9,8 +11,12 @@ case class Board(var name: String) {
     entries = entries :+ entry
   }
 
-  def addNewEntry(entryContent: String): Unit = {
-    addEntry(Entry(entries.size+1, done = false, entryContent))
+  def addNewEntry(entryContent:String): Entry = {
+    val now = Calendar.getInstance()
+    val date:String = now.get(Calendar.DAY_OF_MONTH) + "/" + now.get(Calendar.MONTH) + "/" + now.get(Calendar.YEAR)
+    val entry = Entry(entries.size+1,date, done = false, entryContent)
+    addEntry(entry)
+    entry
   }
 
   def updateEntry(entry: Entry): Unit = {
